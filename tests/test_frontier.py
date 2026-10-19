@@ -80,6 +80,18 @@ def test_arithmetic_and_hull_never_cherry_pick():
     assert (result["known"], result["low"], result["high"], result["reason"]) == (False, 0, None, "AMBIGUOUS")
 
 
+def test_semantic_scope_mapping_materially_changes_frontier():
+    documents = [json.loads(x) for x in BODIES]
+    correct = [NS["measurement_ranges"](OBJS, d["measurements"], matrix) for d, matrix in zip(documents, MATRICES)]
+    assert NS["frontier"](correct, OBJS)["certain_frontier"] == [2]
+    # Incorrectly including the one-worker row widens A's latency hull and
+    # removes the guarantee that C is non-dominated. AI labels are consequential.
+    wrong = json.loads(json.dumps(MATRICES[0]))
+    wrong[0][2] = "MATCH"
+    correct[0] = NS["measurement_ranges"](OBJS, documents[0]["measurements"], wrong)
+    assert NS["frontier"](correct, OBJS)["certain_frontier"] == []
+
+
 def point_frontier(points, directions):
     result = []
     for i, p in enumerate(points):
@@ -271,6 +283,22 @@ def test_creator_limit(contract, direct_vm):
         open_panel(contract, str(i))
     with direct_vm.expect_revert("Creator limit"):
         open_panel(contract, "overflow")
+
+
+@pytest.mark.parametrize("sources", ["", SOURCES.splitlines()[0], SOURCES + "\n" + SOURCES.splitlines()[0],
+    SOURCES.replace("examples/a.json", "../a.json"), SOURCES.replace("a" * 40, "main"),
+    SOURCES.replace("examples/a.json", "examples/a.json?token=x")])
+def test_invalid_source_bindings(contract, direct_vm, sources):
+    with direct_vm.expect_revert("Invalid panel specification"):
+        open_panel(contract, "invalid", sources=sources)
+
+
+def test_failed_source_cannot_be_promoted_to_ready():
+    source = NS["parse_sources"](SOURCES)[0]
+    report = {"binding": {}, "source": {"url": source["url"], "http": 404, "status": "HTTP_ERROR", "hash": "", "body": ""},
+              "document_status": "READY", "matrix": MATRICES[0]}
+    with pytest.raises(ValueError, match="Document status"):
+        NS["observation_report"](report, {}, source, OBJS)
 
 
 def test_prompt_contains_full_document_notes_and_objectives():

@@ -4,6 +4,10 @@ Consensus-grounded **certain/possible Pareto frontiers over published measuremen
 ranges**. Experimental, unaudited infrastructure—not a performance oracle,
 owner-controlled graph, source-contribution game or consumable certificate.
 
+[Verified StudioNet deployment](https://explorer-studio.genlayer.com/address/0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817).
+Source matches the published contract; see [live proof ledger](LIVE_PROOFS.md)
+for actual finalized execution and state-readback outcomes.
+
 ## Problem and why GenLayer
 
 A benchmark shortlist can be wrong even when every number is authentic: the
@@ -169,6 +173,12 @@ C is robustly non-dominated because of latency, **not a declared overall winner*
 A remains possibly non-dominated depending on C's unknown throughput.
 Actual outcomes—not expectations—belong in [LIVE_PROOFS.md](LIVE_PROOFS.md).
 
+Live StudioNet outcome matches that envelope. All 13 transactions finalized:
+ten successful executions and three expected rejections (early finalization,
+source replay, wrong root). A second panel with a wrong full-body commitment
+finalized HELD with no frontier access. Source, observation/result roots and
+endpoint-enumerated envelope were independently verified after the negative tests.
+
 ## Install, test, deploy
 
 ```powershell
@@ -200,6 +210,15 @@ FINALIZED alone is insufficient: check execution and consensus, compare Explorer
 source with this exact contract, then recompute observation/result roots and
 frontier membership from state. Distributed disagreement and expected errors
 must be listed separately from successful committed transactions.
+
+Local validation: 34 Python tests, four independent Node checker tests, seven SDK
+calldata roundtrips and GenVM lint/SDK semantic validation pass. The arithmetic
+tests exhaust 1,024 two-candidate/two-objective interval panels under all MIN/MAX
+direction combinations and compare against enumerated point completions. Direct
+tests mock acquisition/AI and run only the leader; the actual validator callback
+is separately exercised for independent refetching and substantive disagreement.
+The independent Node verifier enumerates endpoint worlds and unions/intersects
+their point frontiers instead of reusing the contract's interval comparisons.
 
 ## Limitations
 

@@ -1,0 +1,364 @@
+{
+  "network": "studionet",
+  "chain_id": 61999,
+  "signer": "0x7a413BB4AB62E31d62d4cD9efC8C8a8Dae37FB42",
+  "fixture_commit": "aba2c068c9c56ca36c63b9b4fe572b14e7cd9abe",
+  "transactions": [
+    {
+      "step": "deploy",
+      "verified": true,
+      "hash": "0xedac8fdabf21aa97be97e7d78112b6e1fef45c60b2df18088d8c6e669eb8d878",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "open-scope-panel-v1",
+      "verified": true,
+      "hash": "0x8787c264c5c82837ae13338fab9e4dd50c0f82036a4b3e38b83c9c173664820a",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "early-finalize",
+      "verified": true,
+      "hash": "0xad909d543b923aa4e65ebf87907459e4bba790262275aa4b3add12b4fb247542",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "consensus": "MAJORITY_AGREE",
+      "expected_error_matched": true
+    },
+    {
+      "step": "observe-c-first",
+      "verified": true,
+      "hash": "0x0f16092beda2081a769915a5dce4b3d266fad974bd5c3cc21827e890fa4d4957",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "replay-c",
+      "verified": true,
+      "hash": "0x1d42c44395501cb4845b38f78a89f148d643c2b6b00d4ded820b30157b33f0ae",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "consensus": "MAJORITY_AGREE",
+      "expected_error_matched": true
+    },
+    {
+      "step": "observe-a-second",
+      "verified": true,
+      "hash": "0x0fd66e32d7430c0f256ff4e0281a9b2d7e60fdd2d46e6e5dff71c37ab53fbab6",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "observe-b-third",
+      "verified": true,
+      "hash": "0x7ed7e3a1014a5398c2bf88073972ee876550b12f6ec15a7e06973bc77073f2b9",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "finalize-frontier",
+      "verified": true,
+      "hash": "0x77c83cb4235bcc1346119c3e1e4ee1ddcd925a7b3d50aebfaab9e464a422401b",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "open-bad-commitment-v1",
+      "verified": true,
+      "hash": "0x5b6d1790a608ed3482fb8b131c6e90e2dd5240867ef321202ddc5c7fcec12900",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "observe-bad-a",
+      "verified": true,
+      "hash": "0xd2680d2ab7f12d97eb8f668658ce7457512d6e516301fa1553c08cdb2b11adcf",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "observe-good-b",
+      "verified": true,
+      "hash": "0xb749662df462cad0b73dc5a418e7b8d719bfa5ea89b97075b720b3710603cdc6",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "finalize-held",
+      "verified": true,
+      "hash": "0x95333d77cd5ab848093ee555ab413a7ae4c76756848ee140a98178d29186969a",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "wrong-input-root",
+      "verified": true,
+      "hash": "0xc59eca2a44dad8d9a4498845863be2fff563a595e4252592ae40a2bcbe5dae71",
+      "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "consensus": "MAJORITY_AGREE",
+      "expected_error_matched": true
+    }
+  ],
+  "panels": {
+    "main": {
+      "panel": "8bee8120ec9e9f7790700b09057cc1f4351ec76b1636c2e260d34aa7e02a44cd",
+      "input_root": "7567269e56a47852f328da560b81eee333139b7bc0dd7057ea7d10da0eda1d0f",
+      "root": "0215a83ab93636edd425787e2ab5f3a8f5909d1cb771a7e58ce9145c9d97d53a",
+      "verified": true,
+      "observations": [
+        {
+          "index": 0,
+          "root": "3166126a4491d15c63b46729232da17abf025a9ca1a82285fa5a42e4e17ee871",
+          "source_status": "OK",
+          "document_status": "READY",
+          "matrix": [
+            [
+              "MATCH",
+              "NO_MATCH",
+              "NO_MATCH"
+            ],
+            [
+              "NO_MATCH",
+              "MATCH",
+              "NO_MATCH"
+            ]
+          ],
+          "ranges": [
+            {
+              "low": 10,
+              "high": 12,
+              "known": true,
+              "matched_rows": [
+                0
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ms"
+            },
+            {
+              "low": 100,
+              "high": 110,
+              "known": true,
+              "matched_rows": [
+                1
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ops_s"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "root": "15e5d4a91b3938041a6cd3376eef74c4e29bbeaa0642f56fa5c1c9baca083e71",
+          "source_status": "OK",
+          "document_status": "READY",
+          "matrix": [
+            [
+              "MATCH",
+              "NO_MATCH"
+            ],
+            [
+              "NO_MATCH",
+              "MATCH"
+            ]
+          ],
+          "ranges": [
+            {
+              "low": 20,
+              "high": 25,
+              "known": true,
+              "matched_rows": [
+                0
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ms"
+            },
+            {
+              "low": 70,
+              "high": 80,
+              "known": true,
+              "matched_rows": [
+                1
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ops_s"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "root": "3dfe39441b8aac36512ede9114da07b3daac518be21e70709119cc9dec93faec",
+          "source_status": "OK",
+          "document_status": "READY",
+          "matrix": [
+            [
+              "MATCH",
+              "NO_MATCH"
+            ],
+            [
+              "NO_MATCH",
+              "NO_MATCH"
+            ]
+          ],
+          "ranges": [
+            {
+              "low": 5,
+              "high": 8,
+              "known": true,
+              "matched_rows": [
+                0
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ms"
+            },
+            {
+              "low": 0,
+              "high": null,
+              "known": false,
+              "matched_rows": [],
+              "reason": "MISSING",
+              "unit": "ops_s"
+            }
+          ]
+        }
+      ],
+      "output": {
+        "status": "ANALYZED",
+        "certain_frontier": [
+          2
+        ],
+        "possible_frontier": [
+          0,
+          2
+        ],
+        "certainly_dominated": [
+          {
+            "index": 1,
+            "witness": 0
+          }
+        ],
+        "ambiguous_membership": [
+          0
+        ],
+        "membership_determined": false,
+        "published_measurements_only": true,
+        "assumption": "independent_nonnegative_interval_completions"
+      }
+    },
+    "bad": {
+      "panel": "d5188ef7127772c7ce94ece6a1e9568bffef5d06d7e28993d003124f0b637659",
+      "input_root": "f93b42c46edea935a2757495064231fc12c9d4d0def36b5181299f85833f3946",
+      "root": "d2f92e5930a5fa8df57672a5e1d43fcd0ad01cf572f77dc38ff0678f2e73bd47",
+      "verified": true,
+      "observations": [
+        {
+          "index": 0,
+          "root": "39124b887beb15c3b4ec6d4380e8ee0ab263c9c6eaa710690c0562bc8e88c728",
+          "source_status": "HASH_MISMATCH",
+          "document_status": "ACQUISITION_FAILED",
+          "matrix": [
+            [],
+            []
+          ],
+          "ranges": [
+            {
+              "low": 0,
+              "high": null,
+              "known": false,
+              "matched_rows": [],
+              "reason": "MISSING",
+              "unit": "ms"
+            },
+            {
+              "low": 0,
+              "high": null,
+              "known": false,
+              "matched_rows": [],
+              "reason": "MISSING",
+              "unit": "ops_s"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "root": "b4d56bbdb325afc6660024e37b742c66e31c7d9a4431f48129f0ccd1e4016689",
+          "source_status": "OK",
+          "document_status": "READY",
+          "matrix": [
+            [
+              "MATCH",
+              "NO_MATCH"
+            ],
+            [
+              "NO_MATCH",
+              "MATCH"
+            ]
+          ],
+          "ranges": [
+            {
+              "low": 20,
+              "high": 25,
+              "known": true,
+              "matched_rows": [
+                0
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ms"
+            },
+            {
+              "low": 70,
+              "high": 80,
+              "known": true,
+              "matched_rows": [
+                1
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ops_s"
+            }
+          ]
+        }
+      ],
+      "output": {
+        "status": "HELD",
+        "failed_sources": [
+          0
+        ],
+        "certain_frontier": [],
+        "possible_frontier": []
+      }
+    }
+  },
+  "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+  "source": {
+    "address": "0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817",
+    "source_match": true,
+    "sha256": "80b2a1c222d2615db409780f3451f2eda84daaefa5115815492da501975a9f1d"
+  },
+  "wrong_root_consumer_denied": true,
+  "final_readback_verified": true
+}

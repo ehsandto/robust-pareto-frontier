@@ -2,7 +2,8 @@ const {spawn}=require('node:child_process'),path=require('node:path');
 const args=process.argv.slice(2);
 if(!['deploy','write'].includes(args[0]))throw Error('Only deploy/write supported');
 const cli=process.env.PARETO_CLI_PATH||path.resolve(__dirname,'../../intent-firewall/node_modules/genlayer/dist/index.js');
-const child=spawn(process.execPath,['--dns-result-order=ipv4first','--require',path.join(__dirname,'pin-context.cjs'),
+const native=process.env.PARETO_NATIVE_HTTP==='1'?['--require',path.join(__dirname,'native-http.cjs')]:[];
+const child=spawn(process.execPath,['--dns-result-order=ipv4first',...native,'--require',path.join(__dirname,'pin-context.cjs'),
  '--require',path.join(__dirname,'broadcast-once.cjs'),cli,...args],{windowsHide:true,stdio:['ignore','pipe','pipe']});
 child.stdout.resume();let carry='',known=false;
 const timer=setTimeout(()=>{child.kill();console.error('CLI timeout; inspect known hash before retry');},120000);

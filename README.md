@@ -1,12 +1,17 @@
-# RobustParetoFrontier
+# Rubust-Paretor
+
+Contract: `RobustParetoFrontier` (unchanged implementation). The repository rename
+and fresh deployment do not constitute a different contract architecture.
 
 Consensus-grounded **certain/possible Pareto frontiers over published measurement
 ranges**. Experimental, unaudited infrastructure—not a performance oracle,
 owner-controlled graph, source-contribution game or consumable certificate.
 
-[Verified StudioNet deployment](https://explorer-studio.genlayer.com/address/0x3F7Dd00F48f937046a3AEF0d4b468f90d5A4C817).
-Source matches the published contract; see [live proof ledger](LIVE_PROOFS.md)
+[Verified StudioNet deployment](https://explorer-studio.genlayer.com/address/0x80C3E9880E823064b6566263b937bCed56E11A48).
+Source matches the published contract; see [fresh live proof ledger](deployments/2026-10-20/LIVE_PROOFS.md)
 for actual finalized execution and state-readback outcomes.
+The [original deployment ledger](LIVE_PROOFS.md) remains archived separately;
+its transaction hashes are not proofs for the fresh address.
 
 ## Problem and why GenLayer
 
@@ -171,7 +176,7 @@ Objectives minimize p95 latency and maximize completed requests per second.
 Expected envelope: certain `[C]`, possible `[A,C]`, certainly dominated `[B]`.
 C is robustly non-dominated because of latency, **not a declared overall winner**.
 A remains possibly non-dominated depending on C's unknown throughput.
-Actual outcomes—not expectations—belong in [LIVE_PROOFS.md](LIVE_PROOFS.md).
+Actual outcomes—not expectations—belong in the [fresh live proof ledger](deployments/2026-10-20/LIVE_PROOFS.md).
 
 Live StudioNet outcome matches that envelope. All 13 transactions finalized:
 ten successful executions and three expected rejections (early finalization,
@@ -206,6 +211,26 @@ genlayer call ADDRESS certain_frontier --args PANEL_KEY INPUT_ROOT
 `$objectives` and `$sources` are newline-delimited strings as specified above.
 StudioNet is gasless. Use native encrypted signing, never export wallet keys.
 After uncertain broadcasts inspect the recorded transaction before retrying.
+
+The fresh deployment has a separate dated journal; the original root-level
+proofs are preserved. To resume its known hashes or independently recheck it:
+
+```powershell
+$env:PARETO_PROOF_FILE = 'deployments/2026-10-20/PROOFS.json'
+$env:PARETO_TEST_ACCOUNT = 'studio-proof-deployer'
+$env:PARETO_NATIVE_HTTP = '1'
+node --require ./scripts/native-http.cjs scripts/complete-proofs.mjs 7b38dfca1af7eae8b54a52ecd484e279b78b5ef1
+node --require ./scripts/native-http.cjs scripts/verify-deployment.mjs deployments/2026-10-20/PROOFS.json
+```
+
+The optional Windows-native HTTPS adapter addresses Node transport failures;
+signing stays in the encrypted native keystore and no key is exported. It sends
+only to the Studio endpoint and fetches this demo's exact commit-pinned fixture
+paths through native HTTPS. Request/response bodies remain on pipes, not logs.
+Outside this workspace, set `PARETO_CLI_PATH` to your installed GenLayer CLI's
+`dist/index.js`. The verifier signs and sends nothing. An unknown broadcast
+outcome blocks resumption until its sender history is inspected.
+
 FINALIZED alone is insufficient: check execution and consensus, compare Explorer
 source with this exact contract, then recompute observation/result roots and
 frontier membership from state. Distributed disagreement and expected errors

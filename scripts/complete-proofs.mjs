@@ -1,14 +1,20 @@
 import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
-import {receipt,source,state,read,digest,sha} from './check.mjs';
-const file='PROOFS.json',signer='0x7a413BB4AB62E31d62d4cD9efC8C8a8Dae37FB42';
+import {rpc,receipt,source,state,read,digest,sha,canonical} from './check.mjs';
+const file=process.env.PARETO_PROOF_FILE||'PROOFS.json',signer='0x7a413BB4AB62E31d62d4cD9efC8C8a8Dae37FB42';
+if(file!=='PROOFS.json'&&!/^deployments\/\d{4}-\d{2}-\d{2}\/PROOFS\.json$/.test(file))throw Error('Use a dated deployment journal');
 let proofs;
 if(fs.existsSync(file))proofs=JSON.parse(fs.readFileSync(file,'utf8'));
 else{
  const commit=process.argv[2];if(!/^[0-9a-f]{40}$/.test(commit??''))throw Error('Supply the full published fixture commit');
  proofs={network:'studionet',chain_id:61999,signer,fixture_commit:commit,transactions:[],panels:{}};
 }
+fs.mkdirSync(path.dirname(file),{recursive:true});
 const save=()=>fs.writeFileSync(file,JSON.stringify(proofs,null,2)+'\n');
+proofs.final_readback_verified=false;save();
+let phase='preflight-chain';
 function broadcast(args,onHash){
  return new Promise((resolve,reject)=>{
   const proc=spawn(process.execPath,['--dns-result-order=ipv4first','scripts/run-cli.cjs',...args],{windowsHide:true,
@@ -19,11 +25,13 @@ function broadcast(args,onHash){
  });
 }
 async function transaction(step,args,expected='SUCCESS',message){
+ phase=step;
  let entry=proofs.transactions.find(x=>x.step===step);
- if(!entry){entry={step,verified:false,broadcast_unknown:true};proofs.transactions.push(entry);save();
+ if(!entry){entry={step,expected,cli_arguments:args,...(message?{expected_message:message}:{}),verified:false,broadcast_unknown:true};proofs.transactions.push(entry);save();
   await broadcast(args,hash=>{entry.hash=hash;delete entry.broadcast_unknown;save();console.log(step+' '+hash);});
  }
  if(!entry.hash)throw Error('Unknown broadcast outcome; inspect signer history');
+ if(entry.cli_arguments)assert.equal(canonical(entry.cli_arguments),canonical(args));
  Object.assign(entry,await receipt(entry.hash,expected,message),{verified:true});save();
  console.log(JSON.stringify({step,status:entry.status,execution:entry.execution,consensus:entry.consensus}));return entry;
 }
@@ -31,7 +39,7 @@ const context='Four workers with a 65536-byte request payload.';
 const objectives='MIN|ms|95th percentile end-to-end request latency\nMAX|ops_s|Completed requests per second';
 function sources(names,bad=false){
  return names.map((name,i)=>{const path='examples/'+name+'.json';
-  return 'ehsandto/robust-pareto-frontier/'+proofs.fixture_commit+'/'+path+'|'+(bad&&i===0?'f'.repeat(64):sha(fs.readFileSync(path)));
+  return 'ehsandto/rubust-paretor/'+proofs.fixture_commit+'/'+path+'|'+(bad&&i===0?'f'.repeat(64):sha(fs.readFileSync(path)));
  }).join('\n');
 }
 async function open(name,names,bad=false){
@@ -40,6 +48,13 @@ async function open(name,names,bad=false){
  if(digest(panel.spec)!==panel.input_root)throw Error('Input root mismatch');return {key,root:panel.input_root};
 }
 try{
+ assert.equal(await rpc('eth_chainId',[]),'0xf22f');
+ for(const name of ['a','b','c']){
+  phase='preflight-fixture-'+name;
+  const fixture='examples/'+name+'.json',url='https://raw.githubusercontent.com/ehsandto/rubust-paretor/'+proofs.fixture_commit+'/'+fixture;
+  const response=await fetch(url,{signal:AbortSignal.timeout(20000)});assert(response.ok);
+  assert.equal(sha(Buffer.from(await response.arrayBuffer())),sha(fs.readFileSync(fixture)));
+ }
  const deployed=await transaction('deploy',['deploy','--contract','contracts/RobustParetoFrontier.py']);
  proofs.address=deployed.address;proofs.source=await source(proofs.address);save();
  const main=await open('scope-panel-v1',['a','b','c']);
@@ -49,12 +64,17 @@ try{
  await transaction('observe-a-second',['write',proofs.address,'observe','--args',main.key,'0',main.root]);
  await transaction('observe-b-third',['write',proofs.address,'observe','--args',main.key,'1',main.root]);
  await transaction('finalize-frontier',['write',proofs.address,'finalize','--args',main.key,main.root]);
- proofs.panels.main=await state(proofs.address,main.key);save();console.log(JSON.stringify({scenario:'scope-panel',...proofs.panels.main}));
+ proofs.panels.main=await state(proofs.address,main.key);save();
+ assert.equal(proofs.panels.main.output.status,'ANALYZED');
+ assert.deepEqual(proofs.panels.main.output.certain_frontier,[2]);assert.deepEqual(proofs.panels.main.output.possible_frontier,[0,2]);
+ assert.deepEqual(proofs.panels.main.output.certainly_dominated,[{index:1,witness:0}]);
+ console.log(JSON.stringify({scenario:'scope-panel',output:proofs.panels.main.output}));
  const bad=await open('bad-commitment-v1',['a','b'],true);
  await transaction('observe-bad-a',['write',proofs.address,'observe','--args',bad.key,'0',bad.root]);
  await transaction('observe-good-b',['write',proofs.address,'observe','--args',bad.key,'1',bad.root]);
  await transaction('finalize-held',['write',proofs.address,'finalize','--args',bad.key,bad.root]);
  proofs.panels.bad=await state(proofs.address,bad.key);save();
+ assert.equal(proofs.panels.bad.output.status,'HELD');assert.deepEqual(proofs.panels.bad.output.failed_sources,[0]);
  await transaction('wrong-input-root',['write',proofs.address,'finalize','--args',main.key,'f'.repeat(64)],'ERROR','Input root mismatch');
  for(const [name,prior] of Object.entries(proofs.panels)){
   const current=await state(proofs.address,prior.panel);if(current.root!==prior.root)throw Error('Negative test altered result');
@@ -62,6 +82,7 @@ try{
  }
  let denied=false;try{await read(proofs.address,'certain_frontier',[main.key,'f'.repeat(64)]);}catch(e){denied=e.code===-32000&&e.details==='execution failed';}
  if(!denied)throw Error('Wrong-root consumer denial unverified');
- proofs.wrong_root_consumer_denied=true;proofs.source=await source(proofs.address);proofs.final_readback_verified=true;save();
+ proofs.wrong_root_consumer_denied=true;proofs.source=await source(proofs.address);
+ assert(proofs.transactions.every(t=>t.verified&&t.hash&&!t.broadcast_unknown));proofs.final_readback_verified=true;save();
  console.log(JSON.stringify({complete:true,address:proofs.address,source_match:true,panels:Object.fromEntries(Object.entries(proofs.panels).map(([k,v])=>[k,v.output]))}));
-}catch{console.error('Sanitized proof workflow stopped; inspect recorded hashes and state before any retry');process.exitCode=1;}
+}catch(e){console.error('Sanitized proof workflow stopped at '+phase+' ('+(e instanceof assert.AssertionError?'assertion':'network or receipt check')+'); inspect recorded hashes and state before any retry');process.exitCode=1;}

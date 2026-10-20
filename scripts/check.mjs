@@ -9,14 +9,18 @@ export const canonical=x=>x===null||typeof x!=='object'?JSON.stringify(x).replac
 export const sha=x=>crypto.createHash('sha256').update(x).digest('hex');
 export const digest=x=>sha(canonical(x));
 export async function rpc(method,params){
- const r=await fetch('https://studio.genlayer.com/api',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method,params}),signal:AbortSignal.timeout(20000)});
- if(!r.ok)throw Error('HTTP failure');const p=await r.json();if(p.error||p.result==null)throw Error('RPC failure');return p.result;
+ if(!['eth_chainId','eth_getTransactionByHash','gen_getContractCode','eth_getTransactionCount','sim_getTransactionsForAddress'].includes(method))throw Error('Read-only RPC methods only');
+ for(let attempt=0;attempt<3;attempt++)try{
+  const r=await fetch('https://studio.genlayer.com/api',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method,params}),signal:AbortSignal.timeout(20000)});
+  if(!r.ok)throw Error('HTTP failure');const p=await r.json();if(p.error||p.result==null)throw Error('RPC failure');return p.result;
+ }catch{if(attempt===2)throw Error('Read-only RPC unavailable');await new Promise(r=>setTimeout(r,4000*(attempt+1)));}
 }
 export const client=createClient({chain:studionet});
 export const read=(address,functionName,args)=>client.readContract({address,functionName,args});
 export async function receipt(hash,expected='SUCCESS',message){
  let tx=await rpc('eth_getTransactionByHash',[hash]);
- for(let i=0;tx.status!=='FINALIZED'&&i<20;i++){await new Promise(r=>setTimeout(r,2500));tx=await rpc('eth_getTransactionByHash',[hash]);}
+ const indexed=t=>t.status==='FINALIZED'&&t.result_name&&t.consensus_data?.leader_receipt?.some(x=>x.mode==='leader'&&x.execution_result);
+ for(let i=0;!indexed(tx)&&i<30;i++){await new Promise(r=>setTimeout(r,4000));tx=await rpc('eth_getTransactionByHash',[hash]);}
  const leader=tx.consensus_data?.leader_receipt?.find(x=>x.mode==='leader');
  const raw=leader?.genvm_result?.stderr||leader?.result;
  const decoded=typeof raw!=='string'?'':(/^[A-Za-z0-9+/]*={0,2}$/.test(raw)&&raw.length%4===0?Buffer.from(raw,'base64').toString('utf8'):raw);

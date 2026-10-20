@@ -1,0 +1,515 @@
+{
+  "network": "studionet",
+  "chain_id": 61999,
+  "signer": "0x7a413BB4AB62E31d62d4cD9efC8C8a8Dae37FB42",
+  "fixture_commit": "7b38dfca1af7eae8b54a52ecd484e279b78b5ef1",
+  "transactions": [
+    {
+      "step": "deploy",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "deploy",
+        "--contract",
+        "contracts/RobustParetoFrontier.py"
+      ],
+      "verified": true,
+      "hash": "0x90e3997dc7e09cea47b127cb6da49766f7f8a8afe167034effe8e74cb9c208bf",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "open-scope-panel-v1",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "open_panel",
+        "--args",
+        "scope-panel-v1",
+        "Four workers with a 65536-byte request payload.",
+        "MIN|ms|95th percentile end-to-end request latency\nMAX|ops_s|Completed requests per second",
+        "ehsandto/rubust-paretor/7b38dfca1af7eae8b54a52ecd484e279b78b5ef1/examples/a.json|836e2e623a0280d6e9d2e121ca979f250ca12b7f8cbbd716e50dfcd7befad2b8\nehsandto/rubust-paretor/7b38dfca1af7eae8b54a52ecd484e279b78b5ef1/examples/b.json|d2c45382451c89e114a2b58848f09466a9fc9acf947d5b63e53f7d7d40678279\nehsandto/rubust-paretor/7b38dfca1af7eae8b54a52ecd484e279b78b5ef1/examples/c.json|fe4b7e4f91e9d630ec4b88905d43363df75d3ffc3e8f6eeec8e1e96321d2b5d4"
+      ],
+      "verified": true,
+      "hash": "0xbee354db4346dd0a808c3df40a95c9497a249d7f864c0c087e482fa5663eee8b",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "early-finalize",
+      "expected": "ERROR",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "finalize",
+        "--args",
+        "bd1a979cfcc03a584a8d878a82323404aaf2a46a78cf5ac8e855e6118add362b",
+        "4746cff77523c93f3051dfbd909f479029a13df76d287b1da5c90fae93b16671"
+      ],
+      "expected_message": "Observation barrier incomplete",
+      "verified": true,
+      "hash": "0x346bc35ea50462ba5acd824e31612b6a9b65e542e85ab90066c93f1b9171af96",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "consensus": "MAJORITY_AGREE",
+      "expected_error_matched": true
+    },
+    {
+      "step": "observe-c-first",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "observe",
+        "--args",
+        "bd1a979cfcc03a584a8d878a82323404aaf2a46a78cf5ac8e855e6118add362b",
+        "2",
+        "4746cff77523c93f3051dfbd909f479029a13df76d287b1da5c90fae93b16671"
+      ],
+      "verified": true,
+      "hash": "0xba12e4b3806fc21ea7dd28abdf62430bb4822a07d6d16816450a2c4e69ebc8f2",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "replay-c",
+      "expected": "ERROR",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "observe",
+        "--args",
+        "bd1a979cfcc03a584a8d878a82323404aaf2a46a78cf5ac8e855e6118add362b",
+        "2",
+        "4746cff77523c93f3051dfbd909f479029a13df76d287b1da5c90fae93b16671"
+      ],
+      "expected_message": "Source already observed",
+      "verified": true,
+      "hash": "0x94d778b07bd98abea63bc44dc51c2a4da0acb66272bbcda1c97a566967eedd98",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "consensus": "MAJORITY_AGREE",
+      "expected_error_matched": true
+    },
+    {
+      "step": "observe-a-second",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "observe",
+        "--args",
+        "bd1a979cfcc03a584a8d878a82323404aaf2a46a78cf5ac8e855e6118add362b",
+        "0",
+        "4746cff77523c93f3051dfbd909f479029a13df76d287b1da5c90fae93b16671"
+      ],
+      "verified": true,
+      "hash": "0x7173743d90353b2e57739521c20cc665b46eb0661e3f545c609783176965b56a",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "observe-b-third",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "observe",
+        "--args",
+        "bd1a979cfcc03a584a8d878a82323404aaf2a46a78cf5ac8e855e6118add362b",
+        "1",
+        "4746cff77523c93f3051dfbd909f479029a13df76d287b1da5c90fae93b16671"
+      ],
+      "verified": true,
+      "hash": "0x8dc4369986e5ce11c14b4b311e5c524a088ef4c7898c31a36d873ee215c5d7aa",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "finalize-frontier",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "finalize",
+        "--args",
+        "bd1a979cfcc03a584a8d878a82323404aaf2a46a78cf5ac8e855e6118add362b",
+        "4746cff77523c93f3051dfbd909f479029a13df76d287b1da5c90fae93b16671"
+      ],
+      "verified": true,
+      "hash": "0xa18ff442f679d5387cc98549eb806a0083be900984dbb75ff123e394169381c4",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "open-bad-commitment-v1",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "open_panel",
+        "--args",
+        "bad-commitment-v1",
+        "Four workers with a 65536-byte request payload.",
+        "MIN|ms|95th percentile end-to-end request latency\nMAX|ops_s|Completed requests per second",
+        "ehsandto/rubust-paretor/7b38dfca1af7eae8b54a52ecd484e279b78b5ef1/examples/a.json|ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nehsandto/rubust-paretor/7b38dfca1af7eae8b54a52ecd484e279b78b5ef1/examples/b.json|d2c45382451c89e114a2b58848f09466a9fc9acf947d5b63e53f7d7d40678279"
+      ],
+      "verified": true,
+      "hash": "0x955485aa3f8b37ee0abbbdd4d56cd7406bd2e8d4b728f3d779638c7daeda44e6",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "observe-bad-a",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "observe",
+        "--args",
+        "1a07ebd02953e794e2133bd67bfe0635383bc9a249d75a952b1654d38b15eb29",
+        "0",
+        "e2ad901b4d259f072f564c559e9d8aa32d9185afaaff67cd9443bfc324d2a54a"
+      ],
+      "verified": true,
+      "hash": "0x42e985e43f17b6f85c88cfa43978daed3efeb62ef67277d93d287b756c4bfde4",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "observe-good-b",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "observe",
+        "--args",
+        "1a07ebd02953e794e2133bd67bfe0635383bc9a249d75a952b1654d38b15eb29",
+        "1",
+        "e2ad901b4d259f072f564c559e9d8aa32d9185afaaff67cd9443bfc324d2a54a"
+      ],
+      "verified": true,
+      "hash": "0x1401eb20f853641c47bd299fb0d378d02aae3a4202438a2102fe1308ae2876ad",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "finalize-held",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "finalize",
+        "--args",
+        "1a07ebd02953e794e2133bd67bfe0635383bc9a249d75a952b1654d38b15eb29",
+        "e2ad901b4d259f072f564c559e9d8aa32d9185afaaff67cd9443bfc324d2a54a"
+      ],
+      "verified": true,
+      "hash": "0x4b57ea7e8ca718a8accc8065c3f33f934e6de0cd9fb9ca33e155a081ce73885d",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "consensus": "MAJORITY_AGREE"
+    },
+    {
+      "step": "wrong-input-root",
+      "expected": "ERROR",
+      "cli_arguments": [
+        "write",
+        "0x80C3E9880E823064b6566263b937bCed56E11A48",
+        "finalize",
+        "--args",
+        "bd1a979cfcc03a584a8d878a82323404aaf2a46a78cf5ac8e855e6118add362b",
+        "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ],
+      "expected_message": "Input root mismatch",
+      "verified": true,
+      "hash": "0x4447ffc54f5a4f3fd8d8f019a2d2ba79baa5686bdb1ffc59f61c674b2b648494",
+      "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "consensus": "MAJORITY_AGREE",
+      "expected_error_matched": true
+    }
+  ],
+  "unbroadcast_attempts": [
+    {
+      "step": "deploy",
+      "expected": "SUCCESS",
+      "cli_arguments": [
+        "deploy",
+        "--contract",
+        "contracts/RobustParetoFrontier.py"
+      ],
+      "verified": false,
+      "broadcast_unknown": true,
+      "resolved_by_history_audit": true,
+      "audit": {
+        "chain_id": "0xf22f",
+        "complete_sender_history_count": 337,
+        "latest_nonce": "0x151",
+        "pending_nonce": "0x151",
+        "last_recorded_nonce": 336,
+        "last_recorded_hash": "0x26ccdd1e05750f25c1e6d9695e7ae1a298c133d2e0cdb2bf20e0838c5697a5aa",
+        "last_recorded_contract": "0xf2601f20566e0e8Fd26f2f4Bdd0a2F18d94d23E9",
+        "resolution": "No new deployment in complete sender history and no pending nonce; prior fanout transaction remains latest. Native HTTPS nonce reads independently confirmed 337."
+      }
+    }
+  ],
+  "panels": {
+    "main": {
+      "panel": "bd1a979cfcc03a584a8d878a82323404aaf2a46a78cf5ac8e855e6118add362b",
+      "input_root": "4746cff77523c93f3051dfbd909f479029a13df76d287b1da5c90fae93b16671",
+      "root": "bdbc482a304387fe35ae5136adef6af520fa742e23b55e94f931bc9910b49613",
+      "verified": true,
+      "observations": [
+        {
+          "index": 0,
+          "root": "0cdf662379ba1c34d4b2d1ab28c43ec5146b715041d55c35705f75e5e8e0e648",
+          "source_status": "OK",
+          "document_status": "READY",
+          "matrix": [
+            [
+              "MATCH",
+              "NO_MATCH",
+              "NO_MATCH"
+            ],
+            [
+              "NO_MATCH",
+              "MATCH",
+              "NO_MATCH"
+            ]
+          ],
+          "ranges": [
+            {
+              "low": 10,
+              "high": 12,
+              "known": true,
+              "matched_rows": [
+                0
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ms"
+            },
+            {
+              "low": 100,
+              "high": 110,
+              "known": true,
+              "matched_rows": [
+                1
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ops_s"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "root": "6b84c636d4ecbca85fb9476d79f295bd786d4e03a6913a67e95a54e09b24654c",
+          "source_status": "OK",
+          "document_status": "READY",
+          "matrix": [
+            [
+              "MATCH",
+              "NO_MATCH"
+            ],
+            [
+              "NO_MATCH",
+              "MATCH"
+            ]
+          ],
+          "ranges": [
+            {
+              "low": 20,
+              "high": 25,
+              "known": true,
+              "matched_rows": [
+                0
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ms"
+            },
+            {
+              "low": 70,
+              "high": 80,
+              "known": true,
+              "matched_rows": [
+                1
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ops_s"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "root": "8a5c193969538ea408b803e3f4a59078aa62e642a643a9ee6af09f6c026563cb",
+          "source_status": "OK",
+          "document_status": "READY",
+          "matrix": [
+            [
+              "MATCH",
+              "NO_MATCH"
+            ],
+            [
+              "NO_MATCH",
+              "NO_MATCH"
+            ]
+          ],
+          "ranges": [
+            {
+              "low": 5,
+              "high": 8,
+              "known": true,
+              "matched_rows": [
+                0
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ms"
+            },
+            {
+              "low": 0,
+              "high": null,
+              "known": false,
+              "matched_rows": [],
+              "reason": "MISSING",
+              "unit": "ops_s"
+            }
+          ]
+        }
+      ],
+      "output": {
+        "status": "ANALYZED",
+        "certain_frontier": [
+          2
+        ],
+        "possible_frontier": [
+          0,
+          2
+        ],
+        "certainly_dominated": [
+          {
+            "index": 1,
+            "witness": 0
+          }
+        ],
+        "ambiguous_membership": [
+          0
+        ],
+        "membership_determined": false,
+        "published_measurements_only": true,
+        "assumption": "independent_nonnegative_interval_completions"
+      }
+    },
+    "bad": {
+      "panel": "1a07ebd02953e794e2133bd67bfe0635383bc9a249d75a952b1654d38b15eb29",
+      "input_root": "e2ad901b4d259f072f564c559e9d8aa32d9185afaaff67cd9443bfc324d2a54a",
+      "root": "59e454b4566fc3e36c78fa61de123f81053186a6d09dd6656f9538b0e4f28725",
+      "verified": true,
+      "observations": [
+        {
+          "index": 0,
+          "root": "4bc4f72ddb6854670c8e3287bbba106fbd15a94f4b54e570b9b757dfcc3c1eea",
+          "source_status": "HASH_MISMATCH",
+          "document_status": "ACQUISITION_FAILED",
+          "matrix": [
+            [],
+            []
+          ],
+          "ranges": [
+            {
+              "low": 0,
+              "high": null,
+              "known": false,
+              "matched_rows": [],
+              "reason": "MISSING",
+              "unit": "ms"
+            },
+            {
+              "low": 0,
+              "high": null,
+              "known": false,
+              "matched_rows": [],
+              "reason": "MISSING",
+              "unit": "ops_s"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "root": "f0cae7ab953b004b3a64b518246c00d26af1c05691deceae53721f75418e5fb6",
+          "source_status": "OK",
+          "document_status": "READY",
+          "matrix": [
+            [
+              "MATCH",
+              "NO_MATCH"
+            ],
+            [
+              "NO_MATCH",
+              "MATCH"
+            ]
+          ],
+          "ranges": [
+            {
+              "low": 20,
+              "high": 25,
+              "known": true,
+              "matched_rows": [
+                0
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ms"
+            },
+            {
+              "low": 70,
+              "high": 80,
+              "known": true,
+              "matched_rows": [
+                1
+              ],
+              "reason": "REPORTED_HULL",
+              "unit": "ops_s"
+            }
+          ]
+        }
+      ],
+      "output": {
+        "status": "HELD",
+        "failed_sources": [
+          0
+        ],
+        "certain_frontier": [],
+        "possible_frontier": []
+      }
+    }
+  },
+  "final_readback_verified": true,
+  "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+  "source": {
+    "address": "0x80C3E9880E823064b6566263b937bCed56E11A48",
+    "source_match": true,
+    "sha256": "80b2a1c222d2615db409780f3451f2eda84daaefa5115815492da501975a9f1d"
+  },
+  "wrong_root_consumer_denied": true
+}
